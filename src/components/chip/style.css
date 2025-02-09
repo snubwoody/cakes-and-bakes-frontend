@@ -1,0 +1,13 @@
+.chip{
+	@apply w-fit py-2 px-3 rounded-xl border;
+	transition: all 250ms;
+
+}
+
+.chip:hover{
+	@apply bg-primary-50 border-primary-100;
+}
+
+.chip:has(input:checked){
+	@apply bg-primary-100 border-primary-200;
+}

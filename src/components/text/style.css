@@ -1,0 +1,49 @@
+p{
+	@apply text-neutral-900;
+	text-wrap: nowrap;
+}
+
+p[data-size='base']{
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+p[data-size='h1']{
+	font-size: 4rem;
+	line-height: 1.0;
+}
+
+p[data-size='h2']{
+	font-size: 3rem;
+	line-height: 1.0;
+}
+
+p[data-size='h3']{
+	font-size: 2.25rem;
+	line-height: 1.0;
+}
+
+p[data-size='h4']{
+	font-size: 1.625rem;
+	line-height: 1.9;
+}
+
+p[data-size='h5']{
+	font-size: 1.375rem;
+	line-height: 1.5;
+}
+
+p[data-size='h6']{
+	font-size: 1.125rem;
+	line-height: 1.5;
+}
+
+p[data-size='sm']{
+	font-size: .75rem;
+	line-height: 1.6;
+}
+
+p[data-size='xs']{
+	font-size: .625rem;
+	line-height: 1.65;
+}
