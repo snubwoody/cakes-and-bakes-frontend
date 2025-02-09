@@ -22,6 +22,24 @@ export type CakeFlavor = {
 	currencyCode:number
 }
 
+export class DBClient{
+	constructor(){
+		const cart = localStorage.getItem('cartId')
+		if (cart === null){
+			supabase
+				.from('cart')
+				.insert({})
+				.select('*')
+				.then(val => {
+					// FIXME handle the error
+					let cartId = val.data[0]['id']
+					localStorage.setItem('cartId',cartId)
+					console.info("Initialised cart")
+				})			
+		}
+	}
+}
+
 export async function getCakeFlavors():Promise<Result<CakeFlavor[],string>> {
 	const {data,error} = await supabase.from('cake_flavors').select('*');
 	if (error){

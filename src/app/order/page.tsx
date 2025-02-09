@@ -2,59 +2,32 @@
 import Text from '@/src/components/text/text'
 import './style.css'
 import { SelectChip } from '@/src/components/chip/chip'
-import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
+import { CakeFlavor, CakeSize, DBClient, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
-import { create } from 'zustand'
+import {OrderError,OrderState,OrderStatus,useStore} from './state'
 
+const client = new DBClient()
 export default function Order(){
+	// TODO heading reduce sizes on mobile
+	// TODO overflow on mobile
+	// TODO remove left border on mobile
+	// TODO remove img hover effect on mobile
 	return (
-		<main>
+		<main className='overflow-x-hidden relative'>
 			<Gallery/>
 			<OrderForm/>
+			<Popup/>
 		</main>
 	)
 }
 
-type OrderError = 'MissingFlavor' | 'MissingSize'
-
-interface OrderState{
-	price: number,
-	flavor:CakeFlavor | null,
-	size:CakeSize | null,
-	errors:OrderError[] | null,
-	validate: () => boolean,
-	updateSize: (size:CakeSize) => void,
-	updateFlavor: (flavor:CakeFlavor) => void,
+function Popup(){
+	return(
+		<div className='popup'>
+			<Text size='h5'>Added cake to cart</Text>
+		</div>
+	)
 }
-
-const useStore = create<OrderState>((set)=>({
-	price: 0,
-	errors:null,
-	flavor:null,
-	size:null,
-	updateSize: (value) => set(() => ({price:value.price,size:value})),
-	updateFlavor: (value) => set(() => ({flavor:value})),
-	validate: () => {
-		let valid = true;
-
-		set((state) => {
-			let errors:OrderError[] = []
-			if(state.flavor === null){
-				errors.push('MissingFlavor')
-				valid = false
-			}
-
-			if(state.size === null){
-				errors.push('MissingSize')
-				valid = false
-			}
-
-			return ({errors:errors})
-		})
-
-		return valid
-	}
-}))
 
 function Gallery(){
 
@@ -99,7 +72,14 @@ function OrderForm(){
 	let [flavours,setFlavors] = useState<CakeFlavor[] | null>(null)
 	const price = useStore(state => state.price);
 	const validate = useStore(state => state.validate);
+	const updateStatus = useStore(state => state.updateStatus);
 	const errors = useStore(state => state.errors)
+	// TODO wrap flavours at mall size
+
+	const order = ()=>{
+		validate()
+		updateStatus('Sending')
+	}
 	
 	useEffect(()=>{
 		getCakeSizes().then(value => {
@@ -157,7 +137,11 @@ function OrderForm(){
 				<Text size='h6'>Additional instructions</Text>
 				<textarea></textarea>
 			</div>
-			<button onClick={validate} className='px-4 py-3 text-primary-50 bg-primary-500 rounded-3xl'>Add to cart</button>
+			<button 
+				onClick={order} 
+				className='px-4 py-3 text-primary-50 bg-primary-500 rounded-3xl'>
+				Add to cart
+				</button>
 		</section>
 	)
 }
