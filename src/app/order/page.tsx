@@ -30,11 +30,27 @@ function Popup(){
 }
 
 function Gallery(){
-
+	let [images,setImages] = useState<string[]>([])
 	useEffect(()=>{
-		supabase.storage.from('product-images').list('*').then(val => console.log(val))
+		supabase.storage
+		.from('product-images')
+		.list()
+		.then(({data,error}) => {
+			// FIXME handle error
+			if(!data){
+				return
+			}
+			
+			let urls = data.map(file => 
+				`https://xgeaoarxkbluxxzuxyeb.supabase.co/storage/v1/object/public/product-images//${file.name}`
+			)
+			setImages(urls)
+		})
 
 	},[])
+
+	let urls = images.map((image) => <GalleryImage src={image}/>)
+	
 	return (
 		<section className='p-4 md:p-10 space-y-3'>
 			<div>
@@ -43,25 +59,19 @@ function Gallery(){
 			</div>
 			{/* Carousel on mobile */}
 			<div className='gallery-grid'>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
-				<GalleryImage/>
+				{urls}
 			</div>
 		</section>
 	)
 }
 
-function GalleryImage(){
+function GalleryImage({src}:{src:string}){
+	// FIXME change image sizing
 	return(
 		<div className='w-full min-w-[75px] aspect-[4/3] bg-neutral-100 rounded-2xl'>
 			<img 
 				className='w-full h-full rounded-[inherit]' 
-				src='https://xgeaoarxkbluxxzuxyeb.supabase.co/storage/v1/object/public/product-images//Strawberry%20Cake.jpg'
+				src={src}
 			/>
 		</div>
 	)
