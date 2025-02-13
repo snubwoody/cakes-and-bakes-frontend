@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import Text from "../components/text/text";
+import React from "react";
+import { Provider } from "./provider";
 
 
 export const metadata: Metadata = {
@@ -18,8 +20,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
 			<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet"/>	
 		</head>
 		<body>
-			<NavBar/>
-			{children}
+			<Provider>
+				<NavBar/>
+				{children}
+			</Provider>
 		</body>
 		</html>
 	);

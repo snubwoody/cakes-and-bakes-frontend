@@ -2,11 +2,10 @@
 import Text from '@/src/components/text/text'
 import './style.css'
 import { SelectChip } from '@/src/components/chip/chip'
-import { CakeFlavor, CakeSize, DBClient, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
+import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
 import {OrderError,OrderState,OrderStatus,useStore} from './state'
 
-const client = new DBClient()
 export default function Order(){
 	// TODO heading reduce sizes on mobile
 	// TODO overflow on mobile
@@ -49,7 +48,7 @@ function Gallery(){
 
 	},[])
 
-	let urls = images.map((image) => <GalleryImage src={image}/>)
+	let urls = images.map((image,index) => <GalleryImage key={index} src={image}/>)
 	
 	return (
 		<section className='p-4 md:p-10 space-y-3'>

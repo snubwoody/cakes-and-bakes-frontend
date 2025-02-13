@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { Err, Ok, Result } from "./result";
 
-const supabaseUrl = "https://xgeaoarxkbluxxzuxyeb.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhnZWFvYXJ4a2JsdXh4enV4eWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTIyMjAzMjQsImV4cCI6MjAyNzc5NjMyNH0.MvL-cDJHCodWJXVKrkHD81l9wEV2hmiukmEn0Db8qYw"
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY ?? '';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -20,24 +20,6 @@ export type CakeFlavor = {
 	name:string,
 	price:number,
 	currencyCode:number
-}
-
-export class DBClient{
-	constructor(){
-		const cart = localStorage.getItem('cartId')
-		if (cart === null){
-			supabase
-				.from('cart')
-				.insert({})
-				.select('*')
-				.then(val => {
-					// FIXME handle the error
-					let cartId = val.data[0]['id']
-					localStorage.setItem('cartId',cartId)
-					console.info("Initialised cart")
-				})			
-		}
-	}
 }
 
 export async function getCakeFlavors():Promise<Result<CakeFlavor[],string>> {
