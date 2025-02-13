@@ -9,17 +9,14 @@ export class DBClient{
 	 * then an anonymous user will be created instead.
 	*/
 	async getAnonUser():Promise<Result<User, AuthError | string>>{
-		const {data,error} = await supabase.auth.getUser()
+		const {data} = await supabase.auth.getUser()
+
 		// FIXME handle null user
 		if(data.user){
 			console.debug("Fetched user")
 			return new Ok(data.user)
 		}
 	
-		if(error){
-			return new Err(error)
-		}
-		
 		const {data:userData,error:signInError} = await supabase.auth.signInAnonymously()
 		if(signInError){
 			return new Err(signInError)

@@ -1,9 +1,7 @@
 'use client'
 
-import { use, useEffect } from "react"
+import { useEffect } from "react"
 import { supabase } from "../lib/supabase"
-import { Err, Ok, Result } from "../lib/result"
-import { AuthError, User } from "@supabase/supabase-js"
 import { DBClient } from "../lib/client"
 
 export function Provider({children}:{children:React.ReactNode}){
@@ -14,20 +12,44 @@ export function Provider({children}:{children:React.ReactNode}){
 async function initApp(){
 	const client = new DBClient()
 	let data = await client.getAnonUser()
+	
+	await data.fold_async(async (user)=>{
+		// TODO remember to set cart to null
+		const {data:cart,error:cartError} = await supabase
+			.from('users')
+			.select("cart")
+			.eq('id',user.id)
+			.single()
+		
+		if (cartError){
+			console.error(cartError)
+		}
 
-	data.fold(async (user)=>{
-		const cart = localStorage.getItem('cartId')
-		if(cart){return}
-		let cartId;
+		if(cart?.cart){
+			console.log("Fetched cart")
+			return;
+		}
+		
 		const {data,error} = await supabase
 			.from('cart')
 			.insert({user_id:user.id})
 			.select('*')
-		console.log(data)
-			
+			.single()
 		
-		//localStorage.setItem('cartId')
-	},(err)=>{
+		if(data){
+			const {data:updatedUser,error} = await supabase
+				.from('users')
+				.update({cart:data.id})
+				.eq('id',data.user_id)
+				.select('*')
+				.single()
+
+			if(error){
+				console.error(error)
+			}
+			console.debug("Created new cart")
+		}
+	},async (err)=>{
 		console.error(err)
 	})
 	

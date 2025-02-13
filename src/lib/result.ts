@@ -12,11 +12,18 @@ export class Ok<T,E>{
 	}
 
 	fold<R>(
-		ok:(value:T)=>R | Promise<R>,
-		_err:(error:E) => R | Promise<R>
-	):R | Promise<R>{
+		ok:(value:T)=>R,
+		_err:(error:E) => R
+	):R{
 		let result = Promise.resolve(this.value)
 		return ok(this.value)
+	}
+
+	async fold_async<R>(
+		ok:(value:T) => Promise<R>,
+		_err:(error:E) => Promise<R>
+	):Promise<R>{
+		return await ok(this.value)
 	}
 	
 	isOk():boolean{
@@ -45,9 +52,16 @@ export class Err<T,E>{
 	}
 	
 	fold<R>(
-		_ok:(value:T)=>R | Promise<R>,
-		err:(error:E) => R | Promise<R>
-	):R | Promise<R>{
+		_ok:(value:T) => R,
+		err:(error:E) => R
+	):R{
 		return err(this.error)
+	}
+
+	async fold_async<R>(
+		_ok:(value:T) => Promise<R>,
+		err:(error:E) => Promise<R>
+	) : Promise<R>{
+		return await err(this.error)
 	}
 }
