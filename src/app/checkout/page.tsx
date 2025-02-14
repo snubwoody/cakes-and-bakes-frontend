@@ -97,31 +97,34 @@ function OrderSummary(){
 		const fetchItems = async() => {
 			const client = new DBClient()
 			let items = await client.cartItems()
+			
+			items.fold((cakes)=>{
+				setItems(cakes)
+			},(err)=>{
+				console.error(err)
+			})
 		}
+		fetchItems()
 	},[])
+
+	const cartItems = items?.map((item,index) => <CartItem key={index} cake={item}/>) 
+
 	return(
 		<section className="flex justify-center flex-1">
 			<div className='order-summary'>
-				<ul className='space-y-3 overflow-y-auto'>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
-					<CartItem/>
+				<ul className='space-y-3 overflow-y-auto h-fit'>
+					{items ? cartItems : <Text>Loading</Text>}
 				</ul>
 				<div className='flex justify-between'>
-					<Text>Total</Text>
-					<Text>K 550.00</Text>
+					<Text size='h5'>Total</Text>
+					<Text size='h5'>K 550.00</Text>
 				</div>
 			</div>
 		</section>
 	)
 }
 
-function CartItem(){
+function CartItem({cake}:{cake:Cake}){
 	return(
 		<div>
 			<Text>Chocolate cake</Text>

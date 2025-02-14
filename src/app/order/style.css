@@ -29,6 +29,21 @@ textarea{
 	
 	@media (min-width:500px) {
 		grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+		&:hover{
+			img{
+				transition: all 250ms;
+			}
+	
+			img:not(hover){
+				filter: blur(2.5px);
+			}	
+	
+			img:hover{
+				@apply shadow-lg;
+				filter: none;
+			}
+		}
+		
 	}
 
 	@media (max-width:500px) {
@@ -36,20 +51,6 @@ textarea{
 		grid-auto-columns: 250px;
 	}
 
-	&:hover{
-		img{
-			transition: all 250ms;
-		}
-
-		img:not(hover){
-			filter: blur(2.5px);
-		}	
-
-		img:hover{
-			@apply shadow-lg;
-			filter: none;
-		}
-	}
 	
 }
 
