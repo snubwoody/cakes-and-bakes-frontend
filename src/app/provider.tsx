@@ -49,8 +49,6 @@ async function initApp(){
 			}
 			console.debug("Created new cart")
 		}
-	},async (err)=>{
-		console.error(err)
-	})
+	},async (err)=>{console.error(err)})
 	
 }

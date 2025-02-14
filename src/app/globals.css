@@ -16,3 +16,8 @@ body{
 	display: grid;
 	grid-template-rows: auto 1fr;
 }
+
+/* BUG */
+nextjs-portal{
+	display: none;
+}

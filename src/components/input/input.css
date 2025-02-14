@@ -1,0 +1,8 @@
+
+input{
+	@apply p-2 border w-full border-neutral-200 rounded-lg
+}
+
+input:user-invalid{
+	border-color: theme("borderColor.red.500");
+}

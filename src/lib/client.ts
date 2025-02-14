@@ -1,7 +1,22 @@
 
 import { supabase } from "../lib/supabase"
 import { Err, Ok, Result } from "../lib/result"
-import { AuthError, User } from "@supabase/supabase-js"
+import { AuthError, PostgrestError, User } from "@supabase/supabase-js"
+
+export type Order = {
+	flavourId:number,
+	sizeId:number,
+	message: string | null,
+	messageType: string | null,
+	additionalInstructions: string | null
+}
+
+export type OrderInfo = {
+	name:string,
+	status:string,
+	phone_number:string,
+	email:string,
+}
 
 export class DBClient{
 	/** 
@@ -28,5 +43,70 @@ export class DBClient{
 		}
 
 		return new Err('Failed to create or fetch user')
+	}
+
+	/**
+	 * Get the user's active cart id 
+	*/
+	async cartId():Promise<number>{
+		let {data,error} = await supabase
+			.from('users')
+			.select('cart')
+			.single();
+
+		if(error){
+			console.error(error)
+		}
+		// TODO definitely not robust
+		return data?.cart
+	}
+
+	/**
+	 * Submit an order to the database
+	 */
+	async order(name:string,email:string,phoneNumber:string,date:string){
+		const {data,error:CartError} = await supabase
+			.from("users")
+			.select("cart")
+			.single()
+
+		const {error} = await 
+			supabase
+			.from('orders')
+			.insert({
+				name,
+				email,
+				phone_number:phoneNumber,
+				pick_up:'2024-11-12',
+				cart:data?.cart
+			})
+		
+		console.error(error)
+	}
+
+	/** 
+	 * Add a cake to the cakes table
+	 * @param order - The order info
+	*/
+	async addToCart(order:Order):Promise<Result<null,PostgrestError>>{
+		let cartId = await this.cartId()
+
+		let cake = {
+			flavour_id:order.flavourId,
+			size_id:order.sizeId,
+			message:order.message,
+			message_type:order.messageType,
+			additional_instructions:order.additionalInstructions,
+			cart:cartId
+		}
+
+		const {error} = await supabase.from('cakes').insert(cake)
+		
+		if(error){
+			console.log(error)
+			return new Err(error)
+		}
+
+		return new Ok(null)
 	}
 }

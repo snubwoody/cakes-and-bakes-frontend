@@ -5,8 +5,9 @@ import { SelectChip } from '@/src/components/chip/chip'
 import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
 import {OrderError,OrderState,OrderStatus,useStore} from './state'
+import { DBClient, Order } from '@/src/lib/client'
 
-export default function Order(){
+export default function OrderPage(){
 	// TODO heading reduce sizes on mobile
 	// TODO overflow on mobile
 	// TODO remove left border on mobile
@@ -80,16 +81,9 @@ function OrderForm(){
 	let [sizes,setSizes] = useState<CakeSize[] | null>(null)
 	let [flavours,setFlavors] = useState<CakeFlavor[] | null>(null)
 	const price = useStore(state => state.price);
-	const validate = useStore(state => state.validate);
-	const updateStatus = useStore(state => state.updateStatus);
 	const errors = useStore(state => state.errors)
 	// TODO wrap flavours at mall size
 
-	const order = ()=>{
-		validate()
-		updateStatus('Sending')
-	}
-	
 	useEffect(()=>{
 		getCakeSizes().then(value => {
 			value.fold((sizes) => {
@@ -146,12 +140,41 @@ function OrderForm(){
 				<Text size='h6'>Additional instructions</Text>
 				<textarea></textarea>
 			</div>
-			<button 
-				onClick={order} 
-				className='px-4 py-3 text-primary-50 bg-primary-500 rounded-3xl'>
-				Add to cart
-				</button>
+			<OrderButton/>
 		</section>
+	)
+}
+
+function OrderButton(){
+	const client = new DBClient()
+	const validate = useStore(state => state.validate);
+	const updateStatus = useStore(state => state.updateStatus);
+	const flavor = useStore(state => state.flavor)
+	const size = useStore(state => state.size)
+
+	const order = async()=>{
+		validate()
+		updateStatus('Sending')
+
+		if (!flavor || ! size){return}
+
+		let order:Order = {
+			flavourId:flavor?.id,
+			sizeId:size?.id,
+			message:null,
+			messageType:null,
+			additionalInstructions:null
+		}
+
+		const result = await client.addToCart(order)
+	}
+
+	return (
+		<button 
+			onClick={order} 
+			className='px-4 py-3 text-primary-50 bg-primary-500 rounded-3xl'>
+			Add to cart
+		</button>
 	)
 }
 
