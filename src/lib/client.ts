@@ -63,10 +63,16 @@ export class DBClient{
 
 
 	/** Get the cart items */
-	async cartItems():Promise<Cake[]>{
+	async cartItems():Promise<Result<Cake[],PostgrestError>>{
 		const {data,error:cartError} =  await supabase.from('users').select('cart').single()
+		if (cartError){
+			return new Err(cartError)
+		}
 		
 		const {data:cakeData,error} = await supabase.from('cakes').select('*').eq('cart',data?.cart)
+		if (error){
+			return new Err(error)
+		}
 		
 		const cakes = cakeData?.map(item => {
 			const id:number = item['id']
@@ -88,7 +94,7 @@ export class DBClient{
 			)
 		})
 
-		return cakes
+		return new Ok(cakes)
 	}
 
 	/**

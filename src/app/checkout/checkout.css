@@ -1,12 +1,39 @@
 
+main{
+	display: flex;
+	gap: 40px;
+	padding: 44px;
+
+	@media (max-width:theme("screens.md")) {
+		padding: 24px;
+	}
+}
 .checkout-form{
-	@apply flex-1 max-w-[600px] px-5 md:px-16 py-11 space-y-6;
+	@apply flex-1 max-w-[600px] space-y-6;
 }
 
 .checkout-title{
 	display: flex;
 	flex-direction: column;
+	
 	@media (max-width:theme("screens.md")) {
 		align-items: center;
+	}
+}
+
+.order-summary{
+	@apply rounded-xl;
+	max-width: 500px;
+	max-height: 350px;
+	display: flex;
+	gap: 12px;
+	flex-direction: column;
+	flex: 1;
+	width: 100%;
+	padding: 24px;
+	border: 1px solid theme('colors.neutral.200');
+
+	@media (max-width:theme("screens.md")) {
+		display: none;
 	}
 }

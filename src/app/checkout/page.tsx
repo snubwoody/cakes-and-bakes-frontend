@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 export default function CheckoutPage(){
 	return(
-		<main className="flex">
+		<main>
 			<CheckoutForm/>
 			<OrderSummary/>
 		</main>
@@ -100,9 +100,33 @@ function OrderSummary(){
 		}
 	},[])
 	return(
-		<section className="flex-1 hidden md:flex">
-			hi
+		<section className="flex justify-center flex-1">
+			<div className='order-summary'>
+				<ul className='space-y-3 overflow-y-auto'>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+					<CartItem/>
+				</ul>
+				<div className='flex justify-between'>
+					<Text>Total</Text>
+					<Text>K 550.00</Text>
+				</div>
+			</div>
 		</section>
+	)
+}
+
+function CartItem(){
+	return(
+		<div>
+			<Text>Chocolate cake</Text>
+			<Text className='text-neutral-500' size='sm'>K 500.00</Text>
+		</div>
 	)
 }
 
