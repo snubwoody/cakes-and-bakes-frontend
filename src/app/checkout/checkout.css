@@ -1,0 +1,12 @@
+
+.checkout-form{
+	@apply flex-1 max-w-[600px] px-5 md:px-16 py-11 space-y-6;
+}
+
+.checkout-title{
+	display: flex;
+	flex-direction: column;
+	@media (max-width:theme("screens.md")) {
+		align-items: center;
+	}
+}

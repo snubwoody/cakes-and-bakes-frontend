@@ -11,7 +11,7 @@ export function Input({label,error,className,...rest}:InputProps){
 	
 	return(
 		<label className="space-y-2">
-			<Text>{label}</Text>
+			<Text className="text-neutral-700">{label}</Text>
 			<input {...rest} className="" />
 			{error ? <Text size='sm' className="text-red-500">{error}</ Text> : null}
 		</label>

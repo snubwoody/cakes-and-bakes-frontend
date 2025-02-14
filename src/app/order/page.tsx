@@ -16,7 +16,6 @@ export default function OrderPage(){
 		<main className='overflow-x-hidden relative'>
 			<Gallery/>
 			<OrderForm/>
-			<Popup/>
 		</main>
 	)
 }

@@ -1,5 +1,5 @@
 
-import { supabase } from "../lib/supabase"
+import { Cake, supabase } from "../lib/supabase"
 import { Err, Ok, Result } from "../lib/result"
 import { AuthError, PostgrestError, User } from "@supabase/supabase-js"
 
@@ -59,6 +59,36 @@ export class DBClient{
 		}
 		// TODO definitely not robust
 		return data?.cart
+	}
+
+
+	/** Get the cart items */
+	async cartItems():Promise<Cake[]>{
+		const {data,error:cartError} =  await supabase.from('users').select('cart').single()
+		
+		const {data:cakeData,error} = await supabase.from('cakes').select('*').eq('cart',data?.cart)
+		
+		const cakes = cakeData?.map(item => {
+			const id:number = item['id']
+			const cart:number = item['cart']
+			const sizeId:number = item['size_id']
+			const flavourId:number = item['flavour_id']
+			const message:string | undefined = item['message']
+			const messageType:string | undefined = item['message_types']
+			const additionalInstructions: string | undefined = item['additional_instructions']
+
+			return new Cake(
+				id,
+				sizeId,
+				flavourId,
+				cart,
+				message,
+				messageType,
+				additionalInstructions
+			)
+		})
+
+		return cakes
 	}
 
 	/**

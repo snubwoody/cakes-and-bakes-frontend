@@ -6,6 +6,33 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY ?? '';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+export class Cake{
+	id:number
+	sizeId:number
+	flavourId:number
+	cart:number
+	message?:string
+	messageType?:string
+	additionalInstructions?:string
+
+	constructor(
+		id:number,
+		sizeId:number,
+		flavourId:number,
+		cart:number,
+		message?:string,
+		messageType?:string,
+		additionalInstructions?:string,
+	){
+		this.id = id
+		this.sizeId = sizeId
+		this.cart = cart
+		this.flavourId = flavourId
+		this.message = message
+		this.messageType = messageType
+		this.additionalInstructions = additionalInstructions
+	}
+}
 export type CakeSize = {
 	id:number,
 	price:number,

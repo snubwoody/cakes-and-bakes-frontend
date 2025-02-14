@@ -1,9 +1,12 @@
 'use client'
+import './checkout.css'
 import Button from "@/src/components/button/button"
 import Text from "@/src/components/text/text"
 import { DBClient } from "@/src/lib/client"
 import { useCheckoutStore } from "./state"
 import { Input } from "@/src/components/input/input"
+import { Cake, supabase } from '@/src/lib/supabase'
+import { useEffect, useState } from 'react'
 
 export default function CheckoutPage(){
 	return(
@@ -49,16 +52,38 @@ function CheckoutForm(){
 
 	// TODO create proper number input
 	return(
-		<form onSubmit={(e)=>e.preventDefault()} className="flex-1 max-w-[600px] px-16 py-11 space-y-6">
-			<div>
+		<form onSubmit={(e)=>e.preventDefault()} className="checkout-form">
+			<div className='checkout-title'>
 				<Text size='h1'>Checkout</Text>
 				<Text size='base'>Please fill in your information</Text>
 			</div>
 			<ul className="flex flex-col gap-9">
-				<Input label="Name" required error={nameError} onChange={(e)=>updateName(e.target.value)}/>
-				<Input label="Email" required error={emailError} onChange={(e)=>updateEmail(e.target.value)}/>
-				<Input label="Phone number" required error={phoneNumberError} onChange={(e)=>updatePhoneNumber(e.target.value)}/>
-				<Input label="Date" required error={dateError} type='date' onChange={(e)=>updateDate(e.target.value)}/>
+				<Input 
+					label="Name" 
+					required 
+					error={nameError} 
+					onChange={(e)=>updateName(e.target.value)}
+				/>
+				<Input 
+					label="Email" 
+					required 
+					type="email"
+					error={emailError} 
+					onChange={(e)=>updateEmail(e.target.value)}
+				/>
+				<Input 
+					label="Phone number" 
+					required 
+					error={phoneNumberError} 
+					onChange={(e)=>updatePhoneNumber(e.target.value)}
+				/>
+				<Input 
+					label="Date" 
+					required 
+					error={dateError} 
+					type='date' 
+					onChange={(e)=>updateDate(e.target.value)}
+				/>
 			</ul>
 			<Button onClick={order}>Confirm purchase</Button>
 		</form>
@@ -66,8 +91,16 @@ function CheckoutForm(){
 }
 
 function OrderSummary(){
+	const [items,setItems] = useState<Cake[] | undefined>()
+
+	useEffect(()=>{
+		const fetchItems = async() => {
+			const client = new DBClient()
+			let items = await client.cartItems()
+		}
+	},[])
 	return(
-		<section className="flex-1">
+		<section className="flex-1 hidden md:flex">
 			hi
 		</section>
 	)
