@@ -107,7 +107,6 @@ function OrderForm(){
 			{sizes ? <CakeSizes sizes={sizes}/>: <Text>Loading</Text>}
 			<Message/>
 			<AdditionalInstructions/>
-			<OrderButton/>
 		</section>
 	)
 }
@@ -134,46 +133,13 @@ function AdditionalInstructions(){
 			<div className='section-header'>
 				<Text size='h6'>Additional instructions</Text>
 			</div>
-			<div className='px-6 pt-5 pb-11 space-y-3'>
+			<div className='px-6 pt-5 pb-40 space-y-3'>
 				<Text className='text-wrap max-w-[75ch] text-neutral-600'>
 					Tell us about any custom requests, delivery details, or special handling instructions.
 				</Text>
 				<textarea></textarea>
 			</div>
 		</>
-	)
-}
-
-function OrderButton(){
-	const client = new DBClient()
-	const validate = useStore(state => state.validate);
-	const updateStatus = useStore(state => state.updateStatus);
-	const flavor = useStore(state => state.flavor)
-	const size = useStore(state => state.size)
-
-	const order = async()=>{
-		validate()
-		updateStatus('Sending')
-
-		if (!flavor || ! size){return}
-
-		let order:Order = {
-			flavourId:flavor?.id,
-			sizeId:size?.id,
-			message:null,
-			messageType:null,
-			additionalInstructions:null
-		}
-
-		const result = await client.addToCart(order)
-	}
-
-	return (
-		<button 
-			onClick={order} 
-			className='px-4 py-3 text-primary-50 bg-primary-500 rounded-3xl'>
-			Add to cart
-		</button>
 	)
 }
 

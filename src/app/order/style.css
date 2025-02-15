@@ -11,6 +11,21 @@ main{
 	border-color: theme('colors.neutral.200');
 }
 
+.footer{
+	position: fixed;
+	width: 100vw;
+	bottom: 0;
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	background-color: white;
+	align-items: center;
+	justify-content: center;
+	border-top-width: 1px;
+	border-color: theme('colors.neutral.400');
+}
+
 .options{
 	padding: 20px 24px;
 	display: flex;
