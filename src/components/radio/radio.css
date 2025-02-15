@@ -1,0 +1,36 @@
+
+
+label{
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.radio-outline{
+	width: 1.5em;
+	aspect-ratio: 1/1;
+	display: grid;
+	padding: 2px;
+	border-radius: 1000px;
+	border: 3px solid theme('colors.neutral.400');
+}
+
+.radio-circle{
+	width: 100%;
+	aspect-ratio: 1/1;
+	border-radius: 1000px;
+	background-color: theme('colors.primary.500');
+}
+
+label:has(input:checked){
+	.radio-outline{
+	
+		border-color: theme('colors.primary.300');
+	}
+}
+
+label:not(:has(input:checked)){
+	.radio-circle{
+		display: none;
+	}
+}

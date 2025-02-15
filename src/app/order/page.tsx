@@ -6,6 +6,8 @@ import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/
 import { useEffect, useState } from 'react'
 import {OrderError,OrderState,OrderStatus,useStore} from './state'
 import { DBClient, Order } from '@/src/lib/client'
+import { RadioButton } from '@/src/components/radio/radio'
+import Footer from './footer'
 
 export default function OrderPage(){
 	// TODO heading reduce sizes on mobile
@@ -16,6 +18,7 @@ export default function OrderPage(){
 		<main className='overflow-x-hidden relative'>
 			<Gallery/>
 			<OrderForm/>
+			<Footer/>
 		</main>
 	)
 }
@@ -52,14 +55,7 @@ function Gallery(){
 	
 	return (
 		<section className='p-4 md:p-10 space-y-3'>
-			<div>
-				<Text size='h2'>Gallery</Text>
-				<Text>Explore our gallery and choose any cake you might like!</Text>
-			</div>
-			{/* Carousel on mobile */}
-			<div className='gallery-grid'>
-				{urls}
-			</div>
+			<GalleryImage src={images[10]}/>
 		</section>
 	)
 }
@@ -83,6 +79,7 @@ function OrderForm(){
 	const errors = useStore(state => state.errors)
 	// TODO wrap flavours at mall size
 
+	// FIXME move these to the components
 	useEffect(()=>{
 		getCakeSizes().then(value => {
 			value.fold((sizes) => {
@@ -102,45 +99,50 @@ function OrderForm(){
 
 	return (
 		<section className='order-form'>
-			<div>
-				<Text size='h2'>Custom cake</Text>
-				<Text size='h4'>K {price}</Text>
+			<div className='py-2 md:py-6 px-6 max-w-[75ch]'>
+				<Text size='h4' className='font-medium'>Create your own cake</Text>
+				<Text className='w-full text-wrap text-neutral-600'>
+					Customize your perfect cake by selecting your preferred flavor, size, and layers. Add a personal message and special instructions to make it unique
+				</Text>
 			</div>
-			{/** Try to animate the error message*/}
-			<div className='flex flex-col gap-2 transition-all'>
-				<div>
-					<Text size='h6'>Flavour</Text>
-					{	errors?.includes('MissingFlavor') ? 
-						<Text className='text-red-500' size='sm'>Please select a flavour</Text>
-						: null
-					}
-				</div>
-				{
-					flavours ? <CakeFlavors flavors={flavours}/>: <ChipSkeleton/>
-				}
-			</div>
-			<div className='space-y-2'>
-				<div>
-					<Text size='h6'>Size</Text>
-					{	errors?.includes('MissingSize') ? 
-						<Text className='text-red-500' size='sm'>Please select a size</Text>
-						: null
-					}
-				</div>
-				{
-					sizes ? <CakeSizes sizes={sizes}/>: <ChipSkeleton/>
-				}
-			</div>
-			<div className='space-y-2'>
-				<Text size='h6'>Personalised message</Text>
-				<textarea></textarea>
-			</div>
-			<div className='space-y-2'>
-				<Text size='h6'>Additional instructions</Text>
-				<textarea></textarea>
-			</div>
+			{flavours ? <CakeFlavors flavors={flavours}/>: <Text>Loading</Text>}
+			{sizes ? <CakeSizes sizes={sizes}/>: <Text>Loading</Text>}
+			<Message/>
+			<AdditionalInstructions/>
 			<OrderButton/>
 		</section>
+	)
+}
+
+function Message(){
+	return(
+		<>
+			<div className='section-header'>
+				<Text size='h6' className='text-neutral-700'>Personalised message</Text>
+			</div>
+			<div className='px-6 pt-5 pb-11 space-y-3'>
+				<Text className='text-wrap max-w-[75ch] text-neutral-600'>
+					You can add a custom message to your cake whether it's for a birthday, anniversary, or just to make someone smile!
+				</Text>
+				<textarea className='px-6'></textarea>
+			</div>
+		</>
+	)
+}
+
+function AdditionalInstructions(){
+	return(
+		<>
+			<div className='section-header'>
+				<Text size='h6'>Additional instructions</Text>
+			</div>
+			<div className='px-6 pt-5 pb-11 space-y-3'>
+				<Text className='text-wrap max-w-[75ch] text-neutral-600'>
+					Tell us about any custom requests, delivery details, or special handling instructions.
+				</Text>
+				<textarea></textarea>
+			</div>
+		</>
 	)
 }
 
@@ -177,73 +179,71 @@ function OrderButton(){
 	)
 }
 
-function ChipSkeleton(){
-	return(
-		<div className='flex gap-3'>
-			<div className='chip-skeleton'>
-			</div>
-			<div className='chip-skeleton'>
-			</div>
-			<div className='chip-skeleton'>
-			</div>
-			<div className='chip-skeleton'>
-			</div>
-			<div className='chip-skeleton'>
-			</div>
-		</div>
-	)
-}
-
 function CakeFlavors({flavors}:{flavors:CakeFlavor[]}){
+	const errors = useStore(state => state.errors)
 	const updateFlavor = useStore(state => state.updateFlavor)
 	
-	let flavorChips = flavors.map((flavor,index) => 
-		<SelectChip key={index} onChange={(value)=>{updateFlavor(value)}} name='flavor' value={flavor}>
-			<Text>{flavor.name}</Text>
-		</SelectChip>
+	let flavorButtons = flavors.map((flavor,index) => 
+		<>
+			<RadioButton name='flavour' onChange={(value)=>updateFlavor(value)} value={flavor} key={index}>
+				<Text className='text-neutral-700'>{flavor.name}</Text>
+			</RadioButton>
+			<div className='divider'></div>
+		</>
 	)
 	
 	return(
-		<div className='space-y-2'>
-			<div className='flex gap-4 overflow-x-auto'>
-				{flavorChips}
+		<>
+			<div className='section-header'>
+				<Text size='h6' className='text-neutral-700'>Flavour</Text>
+				{	errors?.includes('MissingFlavor') ? 
+					<Text className='text-red-500' size='sm'>Please select a flavour</Text>
+					: null
+				}
 			</div>
-		</div>
+			<div className='options'>
+				{flavorButtons}
+			</div>
+		</>
 	)
 }
 
 function CakeSizes({sizes}:{sizes:CakeSize[]}){
+	const errors = useStore(state => state.errors)
 	const updateSize = useStore(state => state.updateSize)
-	const size = useStore(state => state.size)
+	const selectedSize = useStore(state => state.size)
 
-	let sizeChips = sizes.map((size,index) => 
-		<SelectChip key={index} onChange={(value)=>{updateSize(value)}} name='size' value={size}>
-			<Text>{size.label}</Text>
-		</SelectChip>
-	)
-
-	return(
-		<div className='space-y-2'>
-			<div className='flex gap-4 overflow-x-auto'>
-				{sizeChips}	
-			</div>
-			
-			{size ? 
+	let sizeButtons = sizes.map((size,index) => 
+		<>
+			<RadioButton name='size' onChange={(value)=>updateSize(value)} value={size} key={index}>
+				<div className='flex items-center justify-between w-full'>
+					<Text className='text-neutral-700'>{size.label}</Text>
+					<Text className='text-neutral-700'>K {size.price}</Text>
+				</div>
+			</RadioButton>
+			{size === selectedSize ? 
 				<>
-					<div className='flex items-center gap-3'>
-						<Text>Diameter</Text>
-						<div className='h-[0.2px] w-full bg-neutral-200'></div>
-						<Text>{size.inches} inches</Text>
-					</div>
-					<div className='flex items-center gap-3'>
-						<Text>Layers</Text>
-						<div className='h-[0.2px] w-full bg-neutral-200'></div>
-						<Text>{size.layers}</Text>
-					</div>
+					<Text size='sm' className='text-neutral-600'>{size.inches} inches</Text>
+					<Text size='sm' className='text-neutral-600'>{size.layers} layers</Text>
 				</> 
 				: null
 			}
-			
-		</div>
+			<div className='divider'></div>
+		</>
+	)
+
+	return(
+		<>
+			<div className='section-header'>
+				<Text size='h6' className='text-neutral-700'>Size</Text>
+				{	errors?.includes('MissingSize') ? 
+					<Text className='text-red-500' size='sm'>Please select a size</Text>
+					: null
+				}
+			</div>
+			<div className='options'>
+				{sizeButtons}	
+			</div>
+		</>
 	)
 }
