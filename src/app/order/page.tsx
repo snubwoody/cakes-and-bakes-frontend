@@ -10,10 +10,7 @@ import { RadioButton } from '@/src/components/radio/radio'
 import Footer from './footer'
 
 export default function OrderPage(){
-	// TODO heading reduce sizes on mobile
-	// TODO overflow on mobile
 	// TODO remove left border on mobile
-	// TODO remove img hover effect on mobile
 	return (
 		<main className='overflow-x-hidden relative'>
 			<Gallery/>
@@ -78,6 +75,7 @@ function OrderForm(){
 	const price = useStore(state => state.price);
 	const errors = useStore(state => state.errors)
 	// TODO wrap flavours at mall size
+	// FIXME radio button
 
 	// FIXME move these to the components
 	useEffect(()=>{
