@@ -17,5 +17,8 @@ jobs:
         with: 
           node-version: '20.x'
 
+      - name: Install deps
+        run: npm install
+        
       - name: Build next
         run: npm run build
