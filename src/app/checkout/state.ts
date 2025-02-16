@@ -1,6 +1,4 @@
 import { create } from 'zustand'
-import { CakeFlavor, CakeSize } from '@/src/lib/supabase'
-import { DBClient } from '@/src/lib/client';
 
 export type CheckoutStatus = 'Initial' | 'Sending' | 'Success' | 'Error'
 
