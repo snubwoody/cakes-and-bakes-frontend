@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.scss";
 import Link from "next/link";
 import Text from "../components/text/text";
 import React from "react";

@@ -3,18 +3,18 @@ import Text from "@/src/components/text/text"
 import { getCartItems } from "@/src/lib/client"
 import { Cake } from "@/src/lib/supabase"
 import { useEffect, useState } from "react"
-import styles from'./style.module.css'
+import styles from'./style.module.scss'
 import { Minus, Plus, Trash } from "react-feather"
 import Button from "@/src/components/button/button"
 
 export default function CartPage(){
 	return(
-		<main className="p-11 space-y-10">
+		<main>
 			<div>
 				<Text size="h4" className="font-medium">Items in your cart</Text>
 				<Text className="underline text-red-500">Empty cart</Text>
 			</div>
-			<div className={styles.cart_info}>
+			<div className={styles.cart}>
 				<Cart/>
 				<OrderSummary/>
 			</div>
@@ -43,9 +43,13 @@ function Cart(){
 
 	
 	return(
-		<section className={styles.cart}>
+		<section className={styles.cart_items}>
 			{	cartItems ? 
-				cartItems.map((cake,index) => <CartItem key={index} cake={cake}/>) : 
+				cartItems.map((cake,index) => 
+					<>
+						<CartItem key={index} cake={cake}/>
+						<div className="divider"></div>
+					</>) : 
 				<CartSkeleton/>
 			}
 		</section>
@@ -54,7 +58,10 @@ function Cart(){
 
 function CartSkeleton(){
 	return(
-		<div>Loading</div>
+		<div className={styles.cart_item}>
+			<div className={styles.image_loader}></div>
+			<div className={styles.details}></div>
+		</div>
 	)
 }
 
@@ -64,18 +71,18 @@ function CartItem({cake}:{cake:Cake}){
 			<div className="flex gap-6 items-center">
 				<div className={styles.cart_item_image}>
 				</div>
-				<div>
+				<div className={styles.details}>
 					<div>
 						<Text size="h4" className="font-medium">Custom cake</Text>
 						<Text size="h6" className="font-medium">K 100.00</Text>
 					</div>
 					<div>
 						<Text size="h6" className="font-medium">Flavour</Text>
-						<Text>Vanilla</Text>
+						<Text className="text-neutral-600">Vanilla</Text>
 					</div>
 					<div>
 						<Text size="h6" className="font-medium">Size</Text>
-						<Text>XS</Text>
+						<Text className="text-neutral-600">XS</Text>
 					</div>
 				</div>
 			</div>
@@ -105,8 +112,8 @@ function OrderSummary(){
 	return(
 		<section className={styles.order_summary}>
 			<div>
-				<Text>Order summary</Text>
-				<Text>K 500.00</Text>
+				<Text size="h5" className="font-medium">Order total</Text>
+				<Text size="h5" className="font-medium">K 400.00</Text>
 			</div>
 			<Button>Checkout</Button>
 		</section>

@@ -21,3 +21,8 @@ body{
 nextjs-portal{
 	display: none;
 }
+
+.divider{
+	width: 100%;
+	border-bottom: 2px solid theme('colors.neutral.400');
+}
