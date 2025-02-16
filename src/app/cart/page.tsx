@@ -9,7 +9,7 @@ import Button from "@/src/components/button/button"
 
 export default function CartPage(){
 	return(
-		<main>
+		<main className={styles.main}>
 			<div>
 				<Text size="h4" className="font-medium">Items in your cart</Text>
 				<Text className="underline text-red-500">Empty cart</Text>
@@ -73,16 +73,16 @@ function CartItem({cake}:{cake:Cake}){
 				</div>
 				<div className={styles.details}>
 					<div>
-						<Text size="h4" className="font-medium">Custom cake</Text>
-						<Text size="h6" className="font-medium">K 100.00</Text>
+						<h4>Custom cake</h4>
+						<h6>K 100.00</h6>
 					</div>
 					<div>
-						<Text size="h6" className="font-medium">Flavour</Text>
-						<Text className="text-neutral-600">Vanilla</Text>
+						<h6>Flavour</h6>
+						<p>Vanilla</p>
 					</div>
 					<div>
-						<Text size="h6" className="font-medium">Size</Text>
-						<Text className="text-neutral-600">XS</Text>
+						<h6>Size</h6>
+						<p>XS</p>
 					</div>
 				</div>
 			</div>

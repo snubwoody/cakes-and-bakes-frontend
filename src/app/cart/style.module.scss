@@ -1,6 +1,6 @@
 $breakpoint:500px;
 
-main{
+.main{
 	display: flex;
 	flex-direction: column;
 	padding: 44px;
@@ -9,6 +9,7 @@ main{
 	@media (width < $breakpoint) {
 		padding: 20px;
 		gap: 20px;	
+		align-items: center;
 	}
 }
 
@@ -35,10 +36,28 @@ main{
 	justify-content: space-between;
 	align-items: center;
 
+	h4{
+		@apply font-medium;
+	}
+
+	h6{
+		@apply font-medium;
+	}
+
+	p{
+		background-color: theme('colors.neutral.600');
+	}
+
 	@media (width < $breakpoint){
 		flex-direction: column;
 		gap: 24px;
 		justify-content: center;
+	}
+
+	@media (width < 700px) {
+		h4{
+			@apply h6;
+		}
 	}
 }
 
