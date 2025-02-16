@@ -1,37 +1,51 @@
-$breakpoint:500px;
+$breakpoint-tablet: 1000px;
+$breakpoint-mobile: 520px;
 
-.main{
+main{
 	display: flex;
 	flex-direction: column;
 	padding: 44px;
 	gap: 44px;
 
-	@media (width < $breakpoint) {
+	@media (width < $breakpoint-tablet) {
 		padding: 20px;
 		gap: 20px;	
 		align-items: center;
 	}
 }
 
+header{
+	display: flex;
+	flex-direction: column;
+
+	@media (width < $breakpoint-tablet) {
+		align-items: center;
+	}
+}
+
 .cart{
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
 
-	@media (width < $breakpoint) {
+	@media (width < $breakpoint-tablet) {
 		flex-direction: column;
 	}
 }
 
-.cart_items{
+.cart-items{
 	flex: 1;
-	max-width: 750px;
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+	
+	@media (width > $breakpoint-tablet) {
+		max-width: 750px;
+	}
 }
 
-.cart_item{
+.cart-item{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -45,10 +59,10 @@ $breakpoint:500px;
 	}
 
 	p{
-		background-color: theme('colors.neutral.600');
+		color: theme('colors.neutral.600');
 	}
 
-	@media (width < $breakpoint){
+	@media (width < $breakpoint-mobile){
 		flex-direction: column;
 		gap: 24px;
 		justify-content: center;
@@ -58,7 +72,15 @@ $breakpoint:500px;
 		h4{
 			@apply h6;
 		}
+		
+		h6{
+			@apply base;
+		}
 	}
+}
+
+.cart-item-info{
+	@apply flex gap-6 items-center w-full;
 }
 
 .details{
@@ -67,21 +89,20 @@ $breakpoint:500px;
 	gap: 8px;
 }
 
-.image_loader{
+.image-loader{
 	@apply bg-neutral-200 rounded-xl animate-pulse;
-	width: clamp(150px,15vw,215px);
+	width: clamp(125px,15vw,215px);
 	aspect-ratio: 1/1;
 }
 
-.cart_item_image{
+.cart-item-image{
 	@apply bg-neutral-200 rounded-xl;
-	width: clamp(150px,15vw,215px);
+	width: 175px;
 	aspect-ratio: 1/1;
 }
 
-.order_summary{
-	flex: 1;
-	max-width: 350px;
+.order-summary{
+	width: 100%;
 	display: flex;
 	justify-self: center;
 	flex-direction: column;
@@ -91,11 +112,15 @@ $breakpoint:500px;
 	border-radius: theme('borderRadius.2xl');
 	border-width: 1px;
 	border-color: theme('colors.neutral.400');
-
+	
 	div:first-child{
 		display: flex;
 		gap: 8px;
 		align-items: center;
 		justify-content: space-between;
+	}
+	
+	@media (width > $breakpoint-tablet) {
+		max-width: 350px;
 	}
 }

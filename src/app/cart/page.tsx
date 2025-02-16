@@ -3,18 +3,18 @@ import Text from "@/src/components/text/text"
 import { getCartItems } from "@/src/lib/client"
 import { Cake } from "@/src/lib/supabase"
 import { useEffect, useState } from "react"
-import styles from'./style.module.scss'
+import './style.scss'
 import { Minus, Plus, Trash } from "react-feather"
 import Button from "@/src/components/button/button"
 
 export default function CartPage(){
 	return(
-		<main className={styles.main}>
-			<div>
+		<main>
+			<header>
 				<Text size="h4" className="font-medium">Items in your cart</Text>
 				<Text className="underline text-red-500">Empty cart</Text>
-			</div>
-			<div className={styles.cart}>
+			</header>
+			<div className='cart'>
 				<Cart/>
 				<OrderSummary/>
 			</div>
@@ -43,7 +43,7 @@ function Cart(){
 
 	
 	return(
-		<section className={styles.cart_items}>
+		<section className='cart-items'>
 			{	cartItems ? 
 				cartItems.map((cake,index) => 
 					<>
@@ -58,20 +58,20 @@ function Cart(){
 
 function CartSkeleton(){
 	return(
-		<div className={styles.cart_item}>
-			<div className={styles.image_loader}></div>
-			<div className={styles.details}></div>
+		<div className='cart-item'>
+			<div className='image-loader'></div>
+			<div className='details'></div>
 		</div>
 	)
 }
 
 function CartItem({cake}:{cake:Cake}){
 	return(
-		<div className={styles.cart_item}>
-			<div className="flex gap-6 items-center">
-				<div className={styles.cart_item_image}>
+		<div className='cart-item'>
+			<div className="cart-item-info">
+				<div className='cart-item-image'>
 				</div>
-				<div className={styles.details}>
+				<div className='details'>
 					<div>
 						<h4>Custom cake</h4>
 						<h6>K 100.00</h6>
@@ -110,7 +110,7 @@ function Quantity(){
 
 function OrderSummary(){
 	return(
-		<section className={styles.order_summary}>
+		<section className='order-summary'>
 			<div>
 				<Text size="h5" className="font-medium">Order total</Text>
 				<Text size="h5" className="font-medium">K 400.00</Text>
