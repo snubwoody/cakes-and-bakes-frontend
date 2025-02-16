@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { supabase } from "../lib/supabase"
-import { DBClient } from "../lib/client"
+import { getAnonUser } from "../lib/client"
 
 export function Provider({children}:{children:React.ReactNode}){
 	useEffect(()=>{initApp()},[])
@@ -10,8 +10,7 @@ export function Provider({children}:{children:React.ReactNode}){
 }	
 
 async function initApp(){
-	const client = new DBClient()
-	let data = await client.getAnonUser()
+	let data = await getAnonUser()
 	
 	await data.fold_async(async (user)=>{
 		// TODO remember to set cart to null

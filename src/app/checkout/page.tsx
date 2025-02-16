@@ -2,7 +2,7 @@
 import './checkout.css'
 import Button from "@/src/components/button/button"
 import Text from "@/src/components/text/text"
-import { DBClient } from "@/src/lib/client"
+import { getCartItems,order } from "@/src/lib/client"
 import { useCheckoutStore } from "./state"
 import { Input } from "@/src/components/input/input"
 import { Cake, supabase } from '@/src/lib/supabase'
@@ -19,8 +19,6 @@ export default function CheckoutPage(){
 
 // TODO try to integrate css into tailwind
 function CheckoutForm(){
-	const client = new DBClient()
-	
 	const name = useCheckoutStore(state => state.name)
 	const date = useCheckoutStore(state => state.date)
 	const email = useCheckoutStore(state => state.email)
@@ -39,7 +37,7 @@ function CheckoutForm(){
 	// FIXME handle empty strings
 	const validate = useCheckoutStore(state => state.validate)
 	
-	const order = async() => {
+	const purchase = async() => {
 		// Validate the form
 		if(!validate()){return}
 
@@ -47,7 +45,7 @@ function CheckoutForm(){
 		// Was already validated by store
 		if(!name || !email || !phoneNumber || !date){return}
 		
-		client.order(name,email,phoneNumber,date)
+		order(name,email,phoneNumber,date)
 	}
 
 	// TODO create proper number input
@@ -85,7 +83,7 @@ function CheckoutForm(){
 					onChange={(e)=>updateDate(e.target.value)}
 				/>
 			</ul>
-			<Button onClick={order}>Confirm purchase</Button>
+			<Button onClick={purchase}>Confirm purchase</Button>
 		</form>
 	)
 }
@@ -95,8 +93,7 @@ function OrderSummary(){
 
 	useEffect(()=>{
 		const fetchItems = async() => {
-			const client = new DBClient()
-			let items = await client.cartItems()
+			let items = await getCartItems()
 			
 			items.fold((cakes)=>{
 				setItems(cakes)

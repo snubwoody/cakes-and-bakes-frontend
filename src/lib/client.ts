@@ -18,131 +18,143 @@ export type OrderInfo = {
 	email:string,
 }
 
-export class DBClient{
-	/** 
-	 * Get's the current anonymous user, if no user is found
-	 * then an anonymous user will be created instead.
-	*/
-	async getAnonUser():Promise<Result<User, AuthError | string>>{
-		const {data} = await supabase.auth.getUser()
+/** 
+ * Get's the current anonymous user, if no user is found
+ * then an anonymous user will be created instead.
+*/
+export async function  getAnonUser():Promise<Result<User, AuthError | string>>{
+	const {data} = await supabase.auth.getUser()
 
-		// FIXME handle null user
-		if(data.user){
-			console.debug("Fetched user")
-			return new Ok(data.user)
-		}
-	
-		const {data:userData,error:signInError} = await supabase.auth.signInAnonymously()
-		if(signInError){
-			return new Err(signInError)
-		}
-
-		if (userData.user){
-			console.debug("Created new user")
-			return new Ok(userData.user)
-		}
-
-		return new Err('Failed to create or fetch user')
+	// FIXME handle null user
+	if(data.user){
+		console.debug("Fetched user")
+		return new Ok(data.user)
 	}
 
-	/**
-	 * Get the user's active cart id 
-	*/
-	async cartId():Promise<number>{
-		let {data,error} = await supabase
-			.from('users')
-			.select('cart')
-			.single();
-
-		if(error){
-			console.error(error)
-		}
-		// TODO definitely not robust
-		return data?.cart
+	const {data:userData,error:signInError} = await supabase.auth.signInAnonymously()
+	if(signInError){
+		return new Err(signInError)
 	}
 
-
-	/** Get the cart items */
-	async cartItems():Promise<Result<Cake[],PostgrestError>>{
-		const {data,error:cartError} =  await supabase.from('users').select('cart').single()
-		if (cartError){
-			return new Err(cartError)
-		}
-		
-		const {data:cakeData,error} = await supabase.from('cakes').select('*').eq('cart',data?.cart)
-		if (error){
-			return new Err(error)
-		}
-		
-		const cakes = cakeData?.map(item => {
-			const id:number = item['id']
-			const cart:number = item['cart']
-			const sizeId:number = item['size_id']
-			const flavourId:number = item['flavour_id']
-			const message:string | undefined = item['message']
-			const messageType:string | undefined = item['message_types']
-			const additionalInstructions: string | undefined = item['additional_instructions']
-
-			return new Cake(
-				id,
-				sizeId,
-				flavourId,
-				cart,
-				message,
-				messageType,
-				additionalInstructions
-			)
-		})
-
-		return new Ok(cakes)
+	if (userData.user){
+		console.debug("Created new user")
+		return new Ok(userData.user)
 	}
 
-	/**
-	 * Submit an order to the database
-	 */
-	async order(name:string,email:string,phoneNumber:string,date:string){
-		const {data,error:CartError} = await supabase
-			.from("users")
-			.select("cart")
-			.single()
+	return new Err('Failed to create or fetch user')
+}
 
-		const {error} = await 
-			supabase
-			.from('orders')
-			.insert({
-				name,
-				email,
-				phone_number:phoneNumber,
-				pick_up:'2024-11-12',
-				cart:data?.cart
-			})
-		
+/**
+ * Get the user's active cart id 
+*/
+export async function cartId():Promise<number>{
+	let {data,error} = await supabase
+		.from('users')
+		.select('cart')
+		.single();
+
+	if(error){
 		console.error(error)
 	}
+	// TODO definitely not robust
+	return data?.cart
+}
 
-	/** 
-	 * Add a cake to the cakes table
-	 * @param order - The order info
-	*/
-	async addToCart(order:Order):Promise<Result<null,PostgrestError>>{
-		let cartId = await this.cartId()
-
-		let cake = {
-			flavour_id:order.flavourId,
-			size_id:order.sizeId,
-			message:order.message,
-			message_type:order.messageType,
-			additional_instructions:order.additionalInstructions,
-			cart:cartId
-		}
-
-		const {error} = await supabase.from('cakes').insert(cake)
-		
-		if(error){
-			console.log(error)
-			return new Err(error)
-		}
-
-		return new Ok(null)
+/** Get the cart items */
+export async function getCartItems():Promise<Result<Cake[],PostgrestError>>{
+	const {data,error:cartError} =  await supabase.from('users').select('cart').single()
+	if (cartError){
+		return new Err(cartError)
 	}
+	
+	const {data:cakeData,error} = await supabase.from('cakes').select('*').eq('cart',data?.cart)
+	if (error){
+		return new Err(error)
+	}
+	
+	const cakes = cakeData?.map(item => {
+		const id:number = item['id']
+		const cart:number = item['cart']
+		const sizeId:number = item['size_id']
+		const flavourId:number = item['flavour_id']
+		const message:string | undefined = item['message']
+		const messageType:string | undefined = item['message_types']
+		const additionalInstructions: string | undefined = item['additional_instructions']
+
+		return new Cake(
+			id,
+			sizeId,
+			flavourId,
+			cart,
+			message,
+			messageType,
+			additionalInstructions
+		)
+	})
+
+	return new Ok(cakes)
+}
+
+/**
+* Submit an order to the database
+*/
+export async function order(name:string,email:string,phoneNumber:string,date:string){
+	const {data,error:CartError} = await supabase
+		.from("users")
+		.select("cart")
+		.single()
+
+	const {error} = await 
+		supabase
+		.from('orders')
+		.insert({
+			name,
+			email,
+			phone_number:phoneNumber,
+			pick_up:'2024-11-12',
+			cart:data?.cart
+		})
+	
+	console.error(error)
+}
+/**
+* Get the user's active cart id 
+*/
+export async function getCartId():Promise<number>{
+	let {data,error} = await supabase
+		.from('users')
+		.select('cart')
+		.single();
+
+	if(error){
+		console.error(error)
+	}
+	// TODO definitely not robust
+	return data?.cart
+}
+
+/** 
+* Add a cake to the cakes table
+* @param order - The order info
+*/
+export async function addToCart(order:Order):Promise<Result<null,PostgrestError>>{
+	let cartId = await getCartId()
+
+	let cake = {
+		flavour_id:order.flavourId,
+		size_id:order.sizeId,
+		message:order.message,
+		message_type:order.messageType,
+		additional_instructions:order.additionalInstructions,
+		cart:cartId
+	}
+
+	const {error} = await supabase.from('cakes').insert(cake)
+	
+	if(error){
+		console.log(error)
+		return new Err(error)
+	}
+
+	return new Ok(null)
 }

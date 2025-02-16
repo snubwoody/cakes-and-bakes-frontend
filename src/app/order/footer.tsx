@@ -3,10 +3,9 @@ import { useStore } from './state'
 import './style.css'
 import Text from '@/src/components/text/text'
 import { Minus, Plus } from 'react-feather'
-import { DBClient, Order } from '@/src/lib/client'
+import { addToCart, Order } from '@/src/lib/client'
 
 export default function Footer(){
-	const client = new DBClient()
 	const validate = useStore(state => state.validate);
 	const updateStatus = useStore(state => state.updateStatus);
 	const flavor = useStore(state => state.flavor)
@@ -29,7 +28,7 @@ export default function Footer(){
 			additionalInstructions:null
 		}
 
-		const result = await client.addToCart(order)
+		const result = await addToCart(order)
 	}
 	const price = useStore(state => state.price)
 

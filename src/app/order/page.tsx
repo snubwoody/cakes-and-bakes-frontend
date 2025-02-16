@@ -5,7 +5,7 @@ import { SelectChip } from '@/src/components/chip/chip'
 import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
 import {OrderError,OrderState,OrderStatus,useStore} from './state'
-import { DBClient, Order } from '@/src/lib/client'
+import { Order } from '@/src/lib/client'
 import { RadioButton } from '@/src/components/radio/radio'
 import Footer from './footer'
 
@@ -59,6 +59,7 @@ function Gallery(){
 
 function GalleryImage({src}:{src:string}){
 	// FIXME change image sizing
+	// TODO add skeleton
 	return(
 		<div className='w-full min-w-[75px] aspect-[4/3] bg-neutral-100 rounded-2xl'>
 			<img 
