@@ -1,5 +1,5 @@
 
-import { Cake, supabase } from "../lib/supabase"
+import { Cake, CakeFlavor, CakeSize, supabase } from "../lib/supabase"
 import { Err, Ok, Result } from "../lib/result"
 import { AuthError, PostgrestError, User } from "@supabase/supabase-js"
 
@@ -62,12 +62,20 @@ export async function cartId():Promise<number>{
 
 /** Get the cart items */
 export async function getCartItems():Promise<Result<Cake[],PostgrestError>>{
-	const {data,error:cartError} =  await supabase.from('users').select('cart').single()
+	const {data,error:cartError} =  await supabase
+		.from('users')
+		.select('cart')
+		.single()
+
 	if (cartError){
 		return new Err(cartError)
 	}
 	
-	const {data:cakeData,error} = await supabase.from('cakes').select('*').eq('cart',data?.cart)
+	const {data:cakeData,error} = await supabase
+		.from('cakes')
+		.select('*,flavor:cake_flavors(*),size:cake_sizes(*)')
+		.eq('cart',data?.cart)
+	
 	if (error){
 		return new Err(error)
 	}
@@ -75,16 +83,16 @@ export async function getCartItems():Promise<Result<Cake[],PostgrestError>>{
 	const cakes = cakeData?.map(item => {
 		const id:number = item['id']
 		const cart:number = item['cart']
-		const sizeId:number = item['size_id']
-		const flavourId:number = item['flavour_id']
+		const size:CakeSize = item['size']
+		const flavour:CakeFlavor = item['flavor']
 		const message:string | undefined = item['message']
 		const messageType:string | undefined = item['message_types']
 		const additionalInstructions: string | undefined = item['additional_instructions']
 
 		return new Cake(
 			id,
-			sizeId,
-			flavourId,
+			size,
+			flavour,
 			cart,
 			message,
 			messageType,

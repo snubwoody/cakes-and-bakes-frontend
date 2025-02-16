@@ -8,8 +8,8 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export class Cake{
 	id:number
-	sizeId:number
-	flavourId:number
+	size:CakeSize
+	flavor:CakeFlavor
 	cart:number
 	message?:string
 	messageType?:string
@@ -17,17 +17,17 @@ export class Cake{
 
 	constructor(
 		id:number,
-		sizeId:number,
-		flavourId:number,
+		size:CakeSize,
+		flavor:CakeFlavor,
 		cart:number,
 		message?:string,
 		messageType?:string,
 		additionalInstructions?:string,
 	){
 		this.id = id
-		this.sizeId = sizeId
+		this.size = size
 		this.cart = cart
-		this.flavourId = flavourId
+		this.flavor = flavor
 		this.message = message
 		this.messageType = messageType
 		this.additionalInstructions = additionalInstructions

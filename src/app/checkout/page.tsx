@@ -92,6 +92,7 @@ function OrderSummary(){
 	const [items,setItems] = useState<Cake[] | undefined>()
 
 	useEffect(()=>{
+		// FIXME this might be broken
 		const fetchItems = async() => {
 			let items = await getCartItems()
 			

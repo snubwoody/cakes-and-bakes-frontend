@@ -33,10 +33,13 @@ function Cart(){
 		const init = async() => {
 			const result = await getCartItems();
 			result.fold(
-				(items)=>{setCartItems(items)},
+				(items)=>{
+					setCartItems(items)
+				},
 				// FIXME handle error
 				(err)=>{console.error(err)}
 			)
+			console.log(cartItems)
 		}
 		init()
 	},[])
@@ -74,15 +77,15 @@ function CartItem({cake}:{cake:Cake}){
 				<div className='details'>
 					<div>
 						<h4>Custom cake</h4>
-						<h6>K 100.00</h6>
+						<h6>K {cake.size.price}</h6>
 					</div>
 					<div>
 						<h6>Flavour</h6>
-						<p>Vanilla</p>
+						<p>{cake.flavor.name}</p>
 					</div>
 					<div>
 						<h6>Size</h6>
-						<p>XS</p>
+						<p>{cake.size.label}</p>
 					</div>
 				</div>
 			</div>
