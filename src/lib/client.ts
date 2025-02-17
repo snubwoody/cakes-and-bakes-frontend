@@ -6,6 +6,7 @@ import { AuthError, PostgrestError, User } from "@supabase/supabase-js"
 export type Order = {
 	flavourId:number,
 	sizeId:number,
+	quantity:number,
 	message: string | null,
 	messageType: string | null,
 	additionalInstructions: string | null
@@ -83,6 +84,7 @@ export async function getCartItems():Promise<Result<Cake[],PostgrestError>>{
 	const cakes = cakeData?.map(item => {
 		const id:number = item['id']
 		const cart:number = item['cart']
+		const quantity:number = item['quantity']
 		const size:CakeSize = item['size']
 		const flavour:CakeFlavor = item['flavor']
 		const message:string | undefined = item['message']
@@ -94,6 +96,7 @@ export async function getCartItems():Promise<Result<Cake[],PostgrestError>>{
 			size,
 			flavour,
 			cart,
+			quantity,
 			message,
 			messageType,
 			additionalInstructions
@@ -154,7 +157,8 @@ export async function addToCart(order:Order):Promise<Result<null,PostgrestError>
 		message:order.message,
 		message_type:order.messageType,
 		additional_instructions:order.additionalInstructions,
-		cart:cartId
+		cart:cartId,
+		quantity:order.quantity
 	}
 
 	const {error} = await supabase.from('cakes').insert(cake)

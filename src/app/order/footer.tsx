@@ -22,6 +22,7 @@ export default function Footer(){
 
 		let order:Order = {
 			flavourId:flavor?.id,
+			quantity,
 			sizeId:size?.id,
 			message:null,
 			messageType:null,

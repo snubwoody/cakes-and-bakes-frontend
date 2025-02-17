@@ -1,23 +1,25 @@
 
-.btn{
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 16px 36px;
-	gap: 12px;
-	transition: all 250ms;
-}
-
-.btn-pill{
-	border-radius: 9999px;
-}
-
-.btn-primary{
-	color: theme("colors.neutral.50");
-	background-color: theme("colors.primary.500");
-}
-
-.btn-primary:hover{
-	background-color: theme("colors.primary.600");
+@layer components{
+	.btn{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px 36px;
+		gap: 12px;
+		transition: all 250ms;
+	}
+	
+	.btn-pill{
+		border-radius: 9999px;
+	}
+	
+	.btn-primary{
+		color: theme("colors.neutral.50");
+		background-color: theme("colors.primary.500");
+	}
+	
+	.btn-primary:hover{
+		background-color: theme("colors.primary.600");
+	}
 }

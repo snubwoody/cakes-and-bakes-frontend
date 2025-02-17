@@ -5,7 +5,6 @@ import { Cake } from "@/src/lib/supabase"
 import { useEffect, useState } from "react"
 import './style.scss'
 import { Minus, Plus, Trash } from "react-feather"
-import Button from "@/src/components/button/button"
 
 export default function CartPage(){
 	return(
@@ -69,6 +68,7 @@ function CartSkeleton(){
 }
 
 function CartItem({cake}:{cake:Cake}){
+	// Increment then return cake?
 	return(
 		<div className='cart-item'>
 			<div className="cart-item-info">
@@ -90,20 +90,21 @@ function CartItem({cake}:{cake:Cake}){
 				</div>
 			</div>
 			<div className="flex items-center gap-5">
-				<Quantity/>
+				<Quantity cake={cake}/>
 				<Trash/>
 			</div>
 		</div>
 	)
 }
 
-function Quantity(){
+function Quantity({cake}:{cake:Cake}){
+	// Set loading state when incrementing
 	return(
 		<div className='flex items-center gap-4'>
 			<button className='p-3 border border-neutral-500 rounded-full'>
 				<Minus className='text-neutral-600'/>
 			</button>
-			<Text>{1}</Text>
+			<Text>{cake.quantity}</Text>
 			<button className='p-3 border border-neutral-500 rounded-full'>
 				<Plus className='text-neutral-600'/>
 			</button>
@@ -118,7 +119,7 @@ function OrderSummary(){
 				<Text size="h5" className="font-medium">Order total</Text>
 				<Text size="h5" className="font-medium">K 400.00</Text>
 			</div>
-			<Button>Checkout</Button>
+			<a href="/checkout" className="btn btn-pill btn-primary">Checkout</a>
 		</section>
 	)
 }

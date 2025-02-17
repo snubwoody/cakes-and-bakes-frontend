@@ -11,6 +11,7 @@ export class Cake{
 	size:CakeSize
 	flavor:CakeFlavor
 	cart:number
+	quantity:number
 	message?:string
 	messageType?:string
 	additionalInstructions?:string
@@ -20,6 +21,7 @@ export class Cake{
 		size:CakeSize,
 		flavor:CakeFlavor,
 		cart:number,
+		quantity:number,
 		message?:string,
 		messageType?:string,
 		additionalInstructions?:string,
@@ -27,6 +29,7 @@ export class Cake{
 		this.id = id
 		this.size = size
 		this.cart = cart
+		this.quantity = quantity
 		this.flavor = flavor
 		this.message = message
 		this.messageType = messageType

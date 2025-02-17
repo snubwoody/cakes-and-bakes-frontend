@@ -1,6 +1,5 @@
 'use client'
 import './checkout.css'
-import Button from "@/src/components/button/button"
 import Text from "@/src/components/text/text"
 import { getCartItems,order } from "@/src/lib/client"
 import { useCheckoutStore } from "./state"
@@ -83,7 +82,7 @@ function CheckoutForm(){
 					onChange={(e)=>updateDate(e.target.value)}
 				/>
 			</ul>
-			<Button onClick={purchase}>Confirm purchase</Button>
+			<button className='btn btn-pill btn-primary' onClick={purchase}>Confirm purchase</button>
 		</form>
 	)
 }
