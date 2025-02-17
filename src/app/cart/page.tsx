@@ -133,7 +133,7 @@ function Quantity({cake}:{cake:Cake}){
 			<button onClick={decrement} className='p-3 border border-neutral-500 rounded-full'>
 				<Minus className='text-neutral-600'/>
 			</button>
-			{loading ? <div>loading</div> : <Text>{cake.quantity}</Text>}
+			{loading ? <div className="spinner"></div> : <Text>{cake.quantity}</Text>}
 			<button onClick={increment} className='p-3 border border-neutral-500 rounded-full'>
 				<Plus className='text-neutral-600'/>
 			</button>

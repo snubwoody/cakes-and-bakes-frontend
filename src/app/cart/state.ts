@@ -18,6 +18,7 @@ export interface CartState{
 	
 	/** Update the quantity of the cart item 
 	 * @param id - The cake id
+	 * @param decrement - Whether to decrement or not, false by default which means the quantity will be updated 
 	*/
 	updateQuantity: (id:number,decrement?:boolean) => Promise<Result<null,PostgrestError>>
 	

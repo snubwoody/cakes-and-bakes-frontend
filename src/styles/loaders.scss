@@ -1,0 +1,22 @@
+
+@keyframes rotation {
+	0%{
+		transform: rotate(0deg);
+	}
+	100%{
+		
+		transform: rotate(360deg);
+	}
+}
+
+@layer components{
+	.spinner{
+		width: 24px;
+		aspect-ratio: 1/1;	
+		border-color: theme('colors.neutral.400');
+		border-radius: 50%;
+		border-width: 3px;
+		border-bottom-color: transparent;
+		animation: rotation 1s linear infinite;
+	}
+}
