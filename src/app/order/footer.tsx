@@ -1,4 +1,3 @@
-import Button from '@/src/components/button/button'
 import { useStore } from './state'
 import './style.css'
 import Text from '@/src/components/text/text'
@@ -51,7 +50,9 @@ export default function Footer(){
 						<Plus className='text-neutral-600'/>
 					</button>
 				</div>
-				<Button onClick={order}>Add to cart</Button>
+				<button onClick={order} className='btn btn-pill btn-primary'>
+					Add to cart
+				</button>
 			</div>
 		</div>
 	)

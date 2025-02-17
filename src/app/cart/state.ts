@@ -1,4 +1,6 @@
+import { Err, Ok, Result } from "@/src/lib/result";
 import { Cake, CakeFlavor, CakeSize, supabase } from "@/src/lib/supabase";
+import { PostgrestError } from "@supabase/supabase-js";
 import { create } from "zustand";
 
 export interface CartState{
@@ -17,12 +19,12 @@ export interface CartState{
 	/** Increment the quantity of the cart item 
 	 * @param id - The cake id
 	*/
-	incrementQuantity: (id:number) => Promise<void>
+	incrementQuantity: (id:number) => Promise<Result<null,PostgrestError>>
 	
 	/** Decrement the quantity of the cart item 
 	 * @param id - The cake id
 	*/
-	decrementQuantity: (id:number) => Promise<void>
+	decrementQuantity: (id:number) => Promise<Result<null,PostgrestError>>
 
 	/** Remove a cake from the cart
 	 * @param id - The cake id
@@ -71,10 +73,53 @@ export const useCart = create<CartState>((set) =>({
 		set(()=>({items:cakes}))
 	},
 	async incrementQuantity(id:number){
-		// Increment and replace the cake, don't replace all cakes
+		// Get the current quantity
+		const {data,error:quantityError} = await supabase
+			.from('cakes')
+			.select('quantity')
+			.eq('id',id)
+			.single()
+		
+		const newQuantity = data?.quantity + 1
+		if(quantityError){
+			return new Err(quantityError)
+		}
+
+		const {data:cake,error} = await supabase
+			.from('cakes')
+			.update({quantity:newQuantity})
+			.eq('id',id)
+			.select('quantity')
+			.single()
+
+		if(error){
+			return new Err(error)
+		}
+		
+		set(state => {
+			if (!state.items){return({})}
+			
+			// Deep copy the array, otherwise state will not change 
+			let items = [...state.items]
+
+			items?.forEach(item => {
+				if(item.id === id){
+					item.quantity = newQuantity 
+				}
+			});
+
+			console.log(items)
+
+			return ({items})
+		})
+
+		console.log(cake,error)
+		
+		return new Ok(null)
 	},
 	async decrementQuantity(id:number){
-
+		
+		return new Ok(null)
 	},
 	async remove(id:number){
 

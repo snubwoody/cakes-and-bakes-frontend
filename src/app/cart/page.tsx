@@ -8,6 +8,8 @@ import { Minus, Plus, Trash } from "react-feather"
 import { useCart } from "./state"
 
 export default function CartPage(){
+	// TODO add empty cart
+	// TODO finish skeleton loaders
 	const fetch = useCart(state => state.fetch)
 
 	useEffect(()=>{
@@ -49,23 +51,6 @@ function EmptyCart(){
 
 function Cart(){
 	const cartItems = useCart(state => state.items)
-	// const [cartItems,setCartItems] = useState<Cake[]>()
-
-	// useEffect(()=>{
-	// 	const init = async() => {
-	// 		const result = await getCartItems();
-	// 		result.fold(
-	// 			(items)=>{
-	// 				setCartItems(items)
-	// 			},
-	// 			// FIXME handle error
-	// 			(err)=>{console.error(err)}
-	// 		)
-	// 		console.log(cartItems)
-	// 	}
-	// 	init()
-	// },[])
-
 	
 	return(
 		<section className='cart-items'>
@@ -121,14 +106,26 @@ function CartItem({cake}:{cake:Cake}){
 }
 
 function Quantity({cake}:{cake:Cake}){
+	type LoadingStatus = 'Increment' | 'Decrement'
 	// Set loading state when incrementing
+	const incrementQuantity = useCart(state => state.incrementQuantity)
+	const decrementQuantity = useCart(state => state.decrementQuantity)
+
+	const increment = async() => {
+		await incrementQuantity(cake.id)
+	}
+	
+	const decrement = async() => {
+		await decrementQuantity(cake.id)
+	}
+
 	return(
 		<div className='flex items-center gap-4'>
-			<button className='p-3 border border-neutral-500 rounded-full'>
+			<button onClick={decrement} className='p-3 border border-neutral-500 rounded-full'>
 				<Minus className='text-neutral-600'/>
 			</button>
 			<Text>{cake.quantity}</Text>
-			<button className='p-3 border border-neutral-500 rounded-full'>
+			<button onClick={increment} className='p-3 border border-neutral-500 rounded-full'>
 				<Plus className='text-neutral-600'/>
 			</button>
 		</div>
