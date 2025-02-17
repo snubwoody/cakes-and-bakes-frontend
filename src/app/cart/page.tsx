@@ -1,12 +1,34 @@
 'use client'
 import Text from "@/src/components/text/text"
 import { getCartItems } from "@/src/lib/client"
-import { Cake } from "@/src/lib/supabase"
+import { Cake, supabase } from "@/src/lib/supabase"
 import { useEffect, useState } from "react"
 import './style.scss'
 import { Minus, Plus, Trash } from "react-feather"
+import { useCart } from "./state"
 
 export default function CartPage(){
+	const fetch = useCart(state => state.fetch)
+
+	useEffect(()=>{
+		const init = async()=> {
+			const {data,error} =  await supabase
+				.from('users')
+				.select('cart')
+				.single()
+			
+			if(error){
+				console.error(error)
+			}
+
+			// FIXME handle null cart
+			if(data){
+				await fetch(data.cart)
+			}
+		}
+		init()
+	},[])
+
 	return(
 		<main>
 			<header>
@@ -26,22 +48,23 @@ function EmptyCart(){
 }
 
 function Cart(){
-	const [cartItems,setCartItems] = useState<Cake[]>()
+	const cartItems = useCart(state => state.items)
+	// const [cartItems,setCartItems] = useState<Cake[]>()
 
-	useEffect(()=>{
-		const init = async() => {
-			const result = await getCartItems();
-			result.fold(
-				(items)=>{
-					setCartItems(items)
-				},
-				// FIXME handle error
-				(err)=>{console.error(err)}
-			)
-			console.log(cartItems)
-		}
-		init()
-	},[])
+	// useEffect(()=>{
+	// 	const init = async() => {
+	// 		const result = await getCartItems();
+	// 		result.fold(
+	// 			(items)=>{
+	// 				setCartItems(items)
+	// 			},
+	// 			// FIXME handle error
+	// 			(err)=>{console.error(err)}
+	// 		)
+	// 		console.log(cartItems)
+	// 	}
+	// 	init()
+	// },[])
 
 	
 	return(
