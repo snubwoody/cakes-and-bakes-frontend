@@ -16,16 +16,11 @@ export interface CartState{
 	*/
 	fetch: (cart:number) => Promise<void>
 	
-	/** Increment the quantity of the cart item 
+	/** Update the quantity of the cart item 
 	 * @param id - The cake id
 	*/
-	incrementQuantity: (id:number) => Promise<Result<null,PostgrestError>>
+	updateQuantity: (id:number,decrement?:boolean) => Promise<Result<null,PostgrestError>>
 	
-	/** Decrement the quantity of the cart item 
-	 * @param id - The cake id
-	*/
-	decrementQuantity: (id:number) => Promise<Result<null,PostgrestError>>
-
 	/** Remove a cake from the cart
 	 * @param id - The cake id
 	*/
@@ -72,33 +67,38 @@ export const useCart = create<CartState>((set) =>({
 
 		set(()=>({items:cakes}))
 	},
-	async incrementQuantity(id:number){
+	async updateQuantity(id:number,decrement?:boolean){
+		const reduce = decrement ?? false
 		// Get the current quantity
 		const {data,error:quantityError} = await supabase
 			.from('cakes')
 			.select('quantity')
 			.eq('id',id)
 			.single()
+
+		let newQuantity = data?.quantity
+		if(!reduce){
+			newQuantity += 1
+		}else{
+			newQuantity -= 1
+		}
 		
-		const newQuantity = data?.quantity + 1
 		if(quantityError){
 			return new Err(quantityError)
 		}
-
-		const {data:cake,error} = await supabase
+		
+		const {error} = await supabase
 			.from('cakes')
 			.update({quantity:newQuantity})
 			.eq('id',id)
-			.select('quantity')
-			.single()
-
+		
 		if(error){
 			return new Err(error)
 		}
 		
 		set(state => {
 			if (!state.items){return({})}
-			
+
 			// Deep copy the array, otherwise state will not change 
 			let items = [...state.items]
 
@@ -108,16 +108,8 @@ export const useCart = create<CartState>((set) =>({
 				}
 			});
 
-			console.log(items)
-
 			return ({items})
 		})
-
-		console.log(cake,error)
-		
-		return new Ok(null)
-	},
-	async decrementQuantity(id:number){
 		
 		return new Ok(null)
 	},

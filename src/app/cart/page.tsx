@@ -106,17 +106,26 @@ function CartItem({cake}:{cake:Cake}){
 }
 
 function Quantity({cake}:{cake:Cake}){
-	type LoadingStatus = 'Increment' | 'Decrement'
-	// Set loading state when incrementing
-	const incrementQuantity = useCart(state => state.incrementQuantity)
-	const decrementQuantity = useCart(state => state.decrementQuantity)
+	// Set to true while the update function is running
+	const [loading,setLoading] = useState(false)
+	const updateQuantity = useCart(state => state.updateQuantity)
 
 	const increment = async() => {
-		await incrementQuantity(cake.id)
+		if(!loading){
+			setLoading(true)
+			const result = await updateQuantity(cake.id)
+			setLoading(false)
+			result.fold((_)=>{},(err)=>{console.error(err)})
+		}
 	}
 	
 	const decrement = async() => {
-		await decrementQuantity(cake.id)
+		if(!loading && cake.quantity > 1){
+			setLoading(true)
+			const result = await updateQuantity(cake.id,true)
+			setLoading(false)
+			result.fold((_)=>{},(err)=>{console.error(err)})
+		}
 	}
 
 	return(
@@ -124,7 +133,7 @@ function Quantity({cake}:{cake:Cake}){
 			<button onClick={decrement} className='p-3 border border-neutral-500 rounded-full'>
 				<Minus className='text-neutral-600'/>
 			</button>
-			<Text>{cake.quantity}</Text>
+			{loading ? <div>loading</div> : <Text>{cake.quantity}</Text>}
 			<button onClick={increment} className='p-3 border border-neutral-500 rounded-full'>
 				<Plus className='text-neutral-600'/>
 			</button>
