@@ -4,6 +4,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { create } from "zustand";
 
 export interface CartState{
+	cartId?:number
 	/** The cart items 
 	 * 
 	 * Cart items will be null on initialization, then will be updated
@@ -27,9 +28,8 @@ export interface CartState{
 	*/
 	remove: (id:number) => Promise<void>
 	
-	/** Remove all items from the cart
-	*/
-	empty: () => Promise<void>
+	/** Remove all items from the cart */
+	empty: () => Promise<Result<null,PostgrestError>>
 }
 
 /** Create a cart store */
@@ -43,7 +43,7 @@ export const useCart = create<CartState>((set) =>({
 		if (error){
 			console.error(error)
 		}
-		
+
 		const cakes = cakeData?.map(item => {
 			const id:number = item['id']
 			const cart:number = item['cart']
@@ -66,7 +66,7 @@ export const useCart = create<CartState>((set) =>({
 			)
 		})
 
-		set(()=>({items:cakes}))
+		set(()=>({cartId:cart,items:cakes}))
 	},
 	async updateQuantity(id:number,decrement?:boolean){
 		const reduce = decrement ?? false
@@ -118,7 +118,28 @@ export const useCart = create<CartState>((set) =>({
 
 	},
 	async empty(){
+		let error;
 
+		set(state => {
+			supabase
+				.from('cakes')
+				.delete()
+				.eq('cart',state.cartId)
+				.then(({error}) => {error = error})
+
+			// If delete failed then don't update cart
+			if(error){
+				return ({})
+			}
+
+			return ({items:[]})
+		})
+
+		if(error){
+			return new Err(error)
+		}
+		
+		return new Ok(null)
 	},
 }))
 

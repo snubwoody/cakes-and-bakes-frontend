@@ -89,6 +89,13 @@ header{
 	gap: 8px;
 }
 
+.skeleton-text{
+	@apply animate-pulse;
+	border-radius: 12px;
+	height: 20px;
+	background-color: theme('colors.neutral.300');
+}
+
 .image-loader{
 	@apply bg-neutral-200 rounded-xl animate-pulse;
 	width: clamp(125px,15vw,215px);
