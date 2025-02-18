@@ -1,7 +1,7 @@
 'use client'
 import Text from '@/src/components/text/text'
 import './style.scss'
-import { CakeSize, getCakeSizes, supabase } from '@/src/lib/supabase'
+import { supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
 import Footer from './footer'
 import { CakeSizes } from './sizes'
