@@ -25,7 +25,13 @@ nextjs-portal{
 	display: none;
 }
 
-.divider{
-	width: 100%;
-	border-bottom: 2px solid theme('colors.neutral.400');
+
+
+@layer components{
+	.divider{
+		width: 100%;
+		height: 2px;
+		border-bottom-width: 2px;
+		border-color: theme('colors.neutral.300');
+	}
 }

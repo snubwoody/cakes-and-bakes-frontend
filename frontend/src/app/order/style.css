@@ -33,11 +33,6 @@ main{
 	gap: 12px;
 }
 
-.divider{
-	width: 100%;
-	border-bottom: 2px solid theme('colors.neutral.400');
-}
-
 .section-header{
 	background-color: theme('colors.neutral.300');
 	padding: 8px 24px;

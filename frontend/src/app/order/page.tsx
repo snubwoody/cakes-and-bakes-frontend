@@ -1,16 +1,16 @@
 'use client'
 import Text from '@/src/components/text/text'
 import './style.css'
-import { SelectChip } from '@/src/components/chip/chip'
 import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
-import {OrderError,OrderState,OrderStatus,useStore} from './state'
-import { Order } from '@/src/lib/client'
-import { RadioButton } from '@/src/components/radio/radio'
+import { useStore } from './state'
 import Footer from './footer'
+import { CakeSizes } from './sizes'
+import { CakeFlavors } from './flavours'
 
 export default function OrderPage(){
 	// TODO remove left border on mobile
+	// TODO add message and personalised message on the cake
 	return (
 		<main className='overflow-x-hidden relative'>
 			<Gallery/>
@@ -72,13 +72,6 @@ function GalleryImage({src}:{src:string}){
 
 function OrderForm(){
 	let [sizes,setSizes] = useState<CakeSize[] | null>(null)
-	let [flavours,setFlavors] = useState<CakeFlavor[] | null>(null)
-	const price = useStore(state => state.price);
-	const errors = useStore(state => state.errors)
-	// TODO wrap flavours at mall size
-	// FIXME radio button
-
-	// FIXME move these to the components
 	useEffect(()=>{
 		getCakeSizes().then(value => {
 			value.fold((sizes) => {
@@ -87,25 +80,18 @@ function OrderForm(){
 				// FIXME handle error
 			})
 		})
-	
-		getCakeFlavors().then(value => {
-			value.fold((flavors) => {setFlavors(flavors)},
-			()=>{
-				// FIXME handle error
-			})
-		})
 	},[])
 
 	return (
 		<section className='order-form'>
 			<div className='py-2 md:py-6 px-6 max-w-[75ch]'>
-				<Text size='h4' className='font-medium'>Create your own cake</Text>
-				<Text className='w-full text-wrap text-neutral-600'>
+				<h4 className='font-medium'>Create your own cake</h4>
+				<p className='w-full text-wrap text-neutral-600'>
 					Customize your perfect cake by selecting your preferred flavor, size, and layers. Add a personal message and special instructions to make it unique
-				</Text>
+				</p>
 			</div>
-			{flavours ? <CakeFlavors flavors={flavours}/>: <Text>Loading</Text>}
-			{sizes ? <CakeSizes sizes={sizes}/>: <Text>Loading</Text>}
+			<CakeFlavors/>
+			<CakeSizes/>
 			<Message/>
 			<AdditionalInstructions/>
 		</section>
@@ -144,71 +130,9 @@ function AdditionalInstructions(){
 	)
 }
 
-function CakeFlavors({flavors}:{flavors:CakeFlavor[]}){
-	const errors = useStore(state => state.errors)
-	const updateFlavor = useStore(state => state.updateFlavor)
-	
-	let flavorButtons = flavors.map((flavor,index) => 
-		<>
-			<RadioButton name='flavour' onChange={(value)=>updateFlavor(value)} value={flavor} key={index}>
-				<Text className='text-neutral-700'>{flavor.name}</Text>
-			</RadioButton>
-			<div className='divider'></div>
-		</>
-	)
-	
+export function RadioSkeleton(){
 	return(
-		<>
-			<div className='section-header'>
-				<Text size='h6' className='text-neutral-700'>Flavour</Text>
-				{	errors?.includes('MissingFlavor') ? 
-					<Text className='text-red-500' size='sm'>Please select a flavour</Text>
-					: null
-				}
-			</div>
-			<div className='options'>
-				{flavorButtons}
-			</div>
-		</>
+		<div className='w-36 h-6 bg-neutral-200 rounded-lg animate-pulse'></div>
 	)
 }
 
-function CakeSizes({sizes}:{sizes:CakeSize[]}){
-	const errors = useStore(state => state.errors)
-	const updateSize = useStore(state => state.updateSize)
-	const selectedSize = useStore(state => state.size)
-
-	let sizeButtons = sizes.map((size,index) => 
-		<>
-			<RadioButton name='size' onChange={(value)=>updateSize(value)} value={size} key={index}>
-				<div className='flex items-center justify-between w-full'>
-					<Text className='text-neutral-700'>{size.label}</Text>
-					<Text className='text-neutral-700'>K {size.price}</Text>
-				</div>
-			</RadioButton>
-			{size === selectedSize ? 
-				<>
-					<Text size='sm' className='text-neutral-600'>{size.inches} inches</Text>
-					<Text size='sm' className='text-neutral-600'>{size.layers} layers</Text>
-				</> 
-				: null
-			}
-			<div className='divider'></div>
-		</>
-	)
-
-	return(
-		<>
-			<div className='section-header'>
-				<Text size='h6' className='text-neutral-700'>Size</Text>
-				{	errors?.includes('MissingSize') ? 
-					<Text className='text-red-500' size='sm'>Please select a size</Text>
-					: null
-				}
-			</div>
-			<div className='options'>
-				{sizeButtons}	
-			</div>
-		</>
-	)
-}

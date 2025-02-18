@@ -6,8 +6,7 @@ import { Minus, Plus, Trash } from "react-feather"
 import { useCart } from "./state"
 
 export default function CartPage(){
-	// TODO add empty cart
-	// TODO finish skeleton loaders
+	// TODO add image for cart items
 	const fetch = useCart(state => state.fetch)
 	const empty = useCart(state => state.empty)
 
