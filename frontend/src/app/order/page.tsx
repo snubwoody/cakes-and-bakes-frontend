@@ -119,9 +119,3 @@ function AdditionalInstructions(){
 	)
 }
 
-export function RadioSkeleton(){
-	return(
-		<div className='w-36 h-6 bg-neutral-200 rounded-lg animate-pulse'></div>
-	)
-}
-

@@ -4,7 +4,7 @@ import Text from '@/src/components/text/text';
 import { CakeFlavor, getCakeFlavors} from '@/src/lib/supabase';
 import { useStore } from './state';
 import { useEffect, useState } from 'react';
-import { RadioSkeleton } from './page';
+import { RadioSkeleton } from './sizes';
 
 export function CakeFlavors() {
 	let [flavors,setFlavors] = useState<CakeFlavor[] | null>(null)

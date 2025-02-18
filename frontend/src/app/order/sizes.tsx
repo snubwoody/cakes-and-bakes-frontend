@@ -5,7 +5,6 @@ import { CakeSize, getCakeSizes, } from '@/src/lib/supabase'
 import {useStore} from './state'
 import { RadioButton } from '@/src/components/radio/radio'
 import { useEffect, useState } from 'react'
-import { RadioSkeleton } from './page'
 
 export function CakeSizes(){
 	const errors = useStore(state => state.errors)
@@ -63,5 +62,12 @@ export function CakeSizes(){
 				}	
 			</div>
 		</>
+	)
+}
+
+
+export function RadioSkeleton(){
+	return(
+		<div className='w-36 h-6 bg-neutral-200 rounded-lg animate-pulse'></div>
 	)
 }
