@@ -4,11 +4,18 @@ main{
 	grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
 }
 
+p{
+	width: 100%;
+	text-wrap: wrap;
+}
+
 .order-form{
 	display: flex;
 	flex-direction: column;
-	border-left-width: 1px;
 	border-color: theme('colors.neutral.200');
+	@media (width > theme('screens.md')) {
+		border-left-width: 1px;
+	}
 }
 
 .footer{
@@ -24,6 +31,16 @@ main{
 	justify-content: center;
 	border-top-width: 1px;
 	border-color: theme('colors.neutral.400');
+}
+
+.footer-actions{
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	
+	@media (width < theme('screens.sm')) {
+		flex-direction: column;
+	}
 }
 
 .options{

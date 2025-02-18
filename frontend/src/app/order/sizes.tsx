@@ -1,6 +1,6 @@
 'use client'
 import Text from '@/src/components/text/text'
-import './style.css'
+import './style.scss'
 import { CakeSize, getCakeSizes, } from '@/src/lib/supabase'
 import {useStore} from './state'
 import { RadioButton } from '@/src/components/radio/radio'

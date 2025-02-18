@@ -1,9 +1,8 @@
 'use client'
 import Text from '@/src/components/text/text'
-import './style.css'
-import { CakeFlavor, CakeSize, getCakeFlavors, getCakeSizes, supabase } from '@/src/lib/supabase'
+import './style.scss'
+import { CakeSize, getCakeSizes, supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
-import { useStore } from './state'
 import Footer from './footer'
 import { CakeSizes } from './sizes'
 import { CakeFlavors } from './flavours'
@@ -11,6 +10,7 @@ import { CakeFlavors } from './flavours'
 export default function OrderPage(){
 	// TODO remove left border on mobile
 	// TODO add message and personalised message on the cake
+
 	return (
 		<main className='overflow-x-hidden relative'>
 			<Gallery/>
@@ -30,6 +30,7 @@ function Popup(){
 
 function Gallery(){
 	let [images,setImages] = useState<string[]>([])
+	
 	useEffect(()=>{
 		supabase.storage
 		.from('product-images')
@@ -59,7 +60,6 @@ function Gallery(){
 
 function GalleryImage({src}:{src:string}){
 	// FIXME change image sizing
-	// TODO add skeleton
 	return(
 		<div className='w-full min-w-[75px] aspect-[4/3] bg-neutral-100 rounded-2xl'>
 			<img 
@@ -71,22 +71,11 @@ function GalleryImage({src}:{src:string}){
 }
 
 function OrderForm(){
-	let [sizes,setSizes] = useState<CakeSize[] | null>(null)
-	useEffect(()=>{
-		getCakeSizes().then(value => {
-			value.fold((sizes) => {
-				setSizes(sizes)
-			},()=>{
-				// FIXME handle error
-			})
-		})
-	},[])
-
 	return (
 		<section className='order-form'>
 			<div className='py-2 md:py-6 px-6 max-w-[75ch]'>
 				<h4 className='font-medium'>Create your own cake</h4>
-				<p className='w-full text-wrap text-neutral-600'>
+				<p className='text-neutral-600 max-sm:text-sm'>
 					Customize your perfect cake by selecting your preferred flavor, size, and layers. Add a personal message and special instructions to make it unique
 				</p>
 			</div>
@@ -105,9 +94,9 @@ function Message(){
 				<Text size='h6' className='text-neutral-700'>Personalised message</Text>
 			</div>
 			<div className='px-6 pt-5 pb-11 space-y-3'>
-				<Text className='text-wrap max-w-[75ch] text-neutral-600'>
+				<p className='max-w-[75ch] max-sm:text-sm text-neutral-600'>
 					You can add a custom message to your cake whether it's for a birthday, anniversary, or just to make someone smile!
-				</Text>
+				</p>
 				<textarea className='px-6'></textarea>
 			</div>
 		</>
@@ -121,9 +110,9 @@ function AdditionalInstructions(){
 				<Text size='h6'>Additional instructions</Text>
 			</div>
 			<div className='px-6 pt-5 pb-40 space-y-3'>
-				<Text className='text-wrap max-w-[75ch] text-neutral-600'>
+				<p className='max-w-[75ch] max-sm:text-sm text-neutral-600'>
 					Tell us about any custom requests, delivery details, or special handling instructions.
-				</Text>
+				</p>
 				<textarea></textarea>
 			</div>
 		</>
