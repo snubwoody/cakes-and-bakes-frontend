@@ -1,6 +1,6 @@
 
-import { Cake, CakeFlavor, CakeSize, supabase } from "../lib/supabase"
-import { Err, Ok, Result } from "../lib/result"
+import { Cake, CakeFlavor, CakeSize, supabase } from "./supabase"
+import { Err, Ok, Result } from "./result"
 import { AuthError, PostgrestError, User } from "@supabase/supabase-js"
 
 export type Order = {
