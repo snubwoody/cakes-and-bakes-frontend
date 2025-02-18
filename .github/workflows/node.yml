@@ -16,13 +16,17 @@ jobs:
         uses: actions/setup-node@v4
         with: 
           node-version: '20.x'
-		
+					
 
       - name: Install deps
-        run: npm install
+        run: |
+          cd frontend 
+          npm install
 
       - name: Build next
-        run: npm run build
+        run: |
+          cd frontend
+          npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_KEY }}
